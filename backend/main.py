@@ -2,8 +2,16 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from graph.workflow import graph
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -22,4 +30,9 @@ def create_proposal(data: dict):
         }
     )
 
-    return result
+    return {
+    "proposal": result["proposal"],
+    "requirements": result["requirements"],
+    "projects": result["similar_projects"]
+}
+
