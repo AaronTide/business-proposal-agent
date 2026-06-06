@@ -5,7 +5,13 @@ import { useState } from "react";
 export default function Home() {
   const [transcript, setTranscript] = useState("");
   const [proposal, setProposal] = useState("");
+
+  //the line below is new:
+  const [requirements, setRequirements] =useState("");
+  //the new line is above:
+
   const [loading, setLoading] = useState(false);
+
 
   const generateProposal = async () => {
     setLoading(true);
@@ -26,6 +32,18 @@ export default function Home() {
     const data = await response.json();
 
     setProposal(data.proposal);
+
+    //this line below is new:
+
+    setRequirements(
+      JSON.stringify(
+    data.requirements,
+    null,
+    2
+  )
+);
+
+/// new part is above:
 
     setLoading(false);
   };
@@ -57,7 +75,9 @@ export default function Home() {
         <p className="mt-4">
           Analyzing...
         </p>
-      )}
+      )
+      
+      }
 
       {proposal && (
         <div className="mt-8 border rounded-lg p-6">
@@ -70,6 +90,31 @@ export default function Home() {
           </pre>
         </div>
       )}
+          
+     {/*new part starts after this bracket */}
+      
+      {
+      
+  requirements && (
+    
+    <div className="mt-8 border p-6 rounded">
+
+      <h2 className="text-xl font-bold mb-4">
+        Extracted Requirements
+      </h2>
+
+      <pre>
+        {requirements}
+      </pre>
+
+    </div>
+  )
+}
+
+{/* new part is above */}
+
+
+
     </main>
   );
 }
