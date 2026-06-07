@@ -56,3 +56,13 @@ export function formatProposalFilename(): string {
   const date = new Date().toISOString().slice(0, 10);
   return `proposal-${date}.txt`;
 }
+
+export function simplifyProposalText(text: string): string {
+  return text
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/\*([^*]+)\*/g, "$1")
+    .replace(/^#{1,6}\s+/gm, "")
+    .replace(/^---+\s*$/gm, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}

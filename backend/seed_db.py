@@ -6,7 +6,7 @@ from pymongo import MongoClient
 load_dotenv()
 
 MONGO_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017/")
-DB_NAME = "proposaldb"
+DB_NAME = os.getenv("MONGODB_DATABASE", "proposaldb")
 
 
 def seed_database():

@@ -6,7 +6,7 @@ import { PIPELINE_STEPS, SAMPLE_TRANSCRIPT } from "@/lib/constants";
 import { parseRequirements } from "@/lib/utils";
 import type { PipelineStep, ProposalResult } from "@/lib/types";
 import PipelineProgress from "./PipelineProgress";
-import ProposalDocument from "./ProposalDocument";
+import ProposalOutput from "./ProposalOutput";
 import RequirementsCard from "./RequirementsCard";
 import SimilarProjectsCard from "./SimilarProjectsCard";
 
@@ -170,8 +170,9 @@ export default function ProposalWorkspace() {
                 Ready when you are
               </h3>
               <p className="text-sm leading-relaxed text-zinc-600">
-                Your transcript will move through the Analyzer, Researcher, and
-                Proposal Generator agents. Results appear here once complete.
+                Your transcript runs through the DealPilot ADK agent (Analyzer,
+                MongoDB MCP Researcher, Proposal Generator). Results appear here
+                once complete.
               </p>
             </div>
           )}
@@ -188,10 +189,19 @@ export default function ProposalWorkspace() {
       </div>
 
       {result && (
-        <section className="mt-10 grid gap-6 lg:grid-cols-2">
-          <RequirementsCard requirements={result.requirements} />
-          <SimilarProjectsCard projects={result.similar_projects} />
-          <ProposalDocument proposal={result.proposal} />
+        <section className="mt-10 space-y-4">
+          {result.saved_to_mongodb && (
+            <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+              Proposal automatically saved to MongoDB
+              {result.mongodb_id ? ` (ID: ${result.mongodb_id})` : ""}.
+            </div>
+          )}
+
+          <div className="grid gap-6 lg:grid-cols-2">
+            <RequirementsCard requirements={result.requirements} />
+            <SimilarProjectsCard projects={result.similar_projects} />
+            <ProposalOutput proposal={result.proposal} />
+          </div>
         </section>
       )}
     </section>

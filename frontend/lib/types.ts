@@ -17,6 +17,8 @@ export type ProposalResult = {
   requirements: Requirements;
   similar_projects: SimilarProject[];
   proposal: string;
+  saved_to_mongodb?: boolean;
+  mongodb_id?: string;
 };
 
 export type PipelineStep = {
@@ -27,4 +29,30 @@ export type PipelineStep = {
 
 export type ApiError = {
   error: string;
+};
+
+export type ChatToolItem = {
+  type: "tool";
+  name: string;
+  status: "running" | "complete";
+};
+
+export type ChatAssistantItem = {
+  type: "assistant";
+  text: string;
+};
+
+export type ChatUserItem = {
+  type: "user";
+  text: string;
+};
+
+export type ChatItem = ChatUserItem | ChatToolItem | ChatAssistantItem;
+
+export type AgentChatResponse = {
+  sessionId: string;
+  items: ChatItem[];
+  proposalResult?: ProposalResult;
+  saved_to_mongodb?: boolean;
+  mongodb_id?: string;
 };

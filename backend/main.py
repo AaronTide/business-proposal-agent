@@ -146,7 +146,9 @@ async def run_pipeline(transcript: str) -> DealPilotResponse:
     RELEVANT HISTORICAL PERFORMANCE:
     {projects_context}
 
-    Generate a complete business proposal between 800 and 1200 words with:
+    Generate a complete business proposal between 800 and 1200 words.
+    Use plain text only — no markdown, no ### headers, no ** bold.
+    Include these sections with simple labels:
     1. Executive Summary
     2. Deep Dive: Understanding Your Needs
     3. Proposed Solutions Architecture
@@ -190,10 +192,17 @@ async def create_proposal_legacy(data: dict):
     """Frontend-compatible endpoint used by Next.js /api/proposal proxy."""
     transcript = data.get("transcript", "")
     result = await run_pipeline(transcript)
+    save_result = save_proposal(
+        transcript,
+        result.requirements.model_dump(),
+        result.proposal,
+    )
     return {
         "proposal": result.proposal,
         "requirements": result.requirements.model_dump(),
         "similar_projects": [p.model_dump() for p in result.similar_projects],
+        "saved_to_mongodb": save_result.get("success", False),
+        "mongodb_id": save_result.get("proposal_id"),
     }
 
 

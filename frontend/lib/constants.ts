@@ -17,13 +17,13 @@ export const PIPELINE_STEPS: PipelineStep[] = [
   {
     id: "research",
     label: "Researcher",
-    description: "Search past projects in MongoDB for relevant case studies.",
+    description: "Search past projects in MongoDB via MCP for relevant case studies.",
   },
   {
     id: "proposal",
     label: "Proposal Generator",
-    description: "Draft a tailored business proposal using Gemini.",
+    description: "Draft a tailored business proposal using Google ADK + Gemini.",
   },
 ];
 
-export const APP_NAME = "Business Proposal Agent";
+export const APP_NAME = "DealPilot";

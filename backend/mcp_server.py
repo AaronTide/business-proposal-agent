@@ -9,7 +9,7 @@ from pymongo.errors import PyMongoError
 mcp = FastMCP("DealPilot-MongoDB-MCP")
 
 MONGO_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017/")
-DB_NAME = "proposaldb"
+DB_NAME = os.getenv("MONGODB_DATABASE", "proposaldb")
 
 
 def get_db_client():
@@ -83,6 +83,84 @@ def save_proposal(
         }
     except PyMongoError as e:
         return {"success": False, "error": str(e)}
+    finally:
+        client.close()
+
+
+@mcp.tool()
+def find_documents(
+    filter: dict[str, Any], limit: int = 3, collection: str = "projects"
+) -> list[dict[str, Any]]:
+    """
+    Find documents in a MongoDB collection. Used by Agent Builder to search
+    similar past projects by industry filter.
+    """
+    client = get_db_client()
+    if not client:
+        return []
+
+    try:
+        cursor = client[DB_NAME][collection].find(filter).limit(limit)
+        results = []
+        for doc in cursor:
+            doc["_id"] = str(doc.get("_id"))
+            results.append(doc)
+        return results
+    except PyMongoError as e:
+        print(f"find_documents failed: {e}")
+        return []
+    finally:
+        client.close()
+
+
+@mcp.tool()
+def insert_document(
+    collection: str,
+    transcript: str,
+    requirements: dict[str, Any],
+    proposal: str,
+    industry: str = "",
+) -> dict[str, Any]:
+    """Insert a generated proposal document into MongoDB."""
+    return save_proposal(
+        transcript=transcript,
+        requirements={**requirements, "industry": industry},
+        proposal_text=proposal,
+    )
+
+
+@mcp.tool()
+def aggregate_documents(
+    collection: str = "projects", industry: str = ""
+) -> dict[str, Any]:
+    """Get project statistics and industry match counts from MongoDB."""
+    client = get_db_client()
+    if not client:
+        return {"total": 0, "by_industry": [], "matched_industry": industry}
+
+    try:
+        coll = client[DB_NAME][collection]
+        pipeline = [
+            {"$group": {"_id": "$industry", "count": {"$sum": 1}}},
+            {"$sort": {"count": -1}},
+        ]
+        by_industry = [
+            {"industry": row["_id"], "count": row["count"]}
+            for row in coll.aggregate(pipeline)
+        ]
+        match_count = coll.count_documents(
+            {"industry": {"$regex": f"^{industry}$", "$options": "i"}}
+        ) if industry else 0
+
+        return {
+            "total": coll.count_documents({}),
+            "by_industry": by_industry,
+            "matched_industry": industry,
+            "match_count": match_count,
+        }
+    except PyMongoError as e:
+        print(f"aggregate_documents failed: {e}")
+        return {"total": 0, "by_industry": [], "error": str(e)}
     finally:
         client.close()
 

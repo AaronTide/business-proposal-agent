@@ -5,6 +5,7 @@ import {
   copyToClipboard,
   downloadTextFile,
   formatProposalFilename,
+  simplifyProposalText,
 } from "@/lib/utils";
 
 type ProposalDocumentProps = {
@@ -13,9 +14,10 @@ type ProposalDocumentProps = {
 
 export default function ProposalDocument({ proposal }: ProposalDocumentProps) {
   const [copied, setCopied] = useState(false);
+  const cleanProposal = simplifyProposalText(proposal);
 
   async function handleCopy() {
-    const success = await copyToClipboard(proposal);
+    const success = await copyToClipboard(cleanProposal);
     if (!success) return;
 
     setCopied(true);
@@ -23,7 +25,7 @@ export default function ProposalDocument({ proposal }: ProposalDocumentProps) {
   }
 
   function handleDownload() {
-    downloadTextFile(formatProposalFilename(), proposal);
+    downloadTextFile(formatProposalFilename(), cleanProposal);
   }
 
   return (
@@ -52,7 +54,7 @@ export default function ProposalDocument({ proposal }: ProposalDocumentProps) {
 
       <div className="max-h-[32rem] overflow-y-auto rounded-xl border border-emerald-100 bg-white p-5">
         <div className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-800">
-          {proposal}
+          {cleanProposal}
         </div>
       </div>
     </article>

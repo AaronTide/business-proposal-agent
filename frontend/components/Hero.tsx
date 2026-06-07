@@ -11,9 +11,8 @@ export default function Hero() {
           Turn discovery calls into winning proposals
         </h1>
         <p className="text-lg leading-relaxed text-zinc-600">
-          Paste a sales call transcript and let three specialized agents analyze
-          requirements, pull similar projects from your knowledge base, and
-          generate a client-ready proposal in minutes.
+          Chat with DealPilot to analyze discovery calls, query MongoDB via MCP,
+          and generate client-ready proposals — powered by Google ADK.
         </p>
       </div>
     </section>
@@ -29,7 +28,7 @@ export function HowItWorks() {
       <div className="mb-10 space-y-2">
         <h2 className="text-2xl font-semibold text-zinc-900">How it works</h2>
         <p className="text-zinc-600">
-          A three-step LangGraph pipeline powers every proposal.
+          Google Cloud ADK agent with MongoDB MCP powers every proposal.
         </p>
       </div>
 
