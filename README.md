@@ -278,7 +278,7 @@ business-proposal-agent/
 | MongoDB MCP integration | ✅ Custom MCP server on Atlas |
 | Google ADK / Agent Builder | ✅ ADK agent (`dealpilot`) |
 | Gemini powered | ✅ `gemini-2.5-flash` |
-| Open-source license | ⬜ Add `LICENSE` file |
+| Open-source license | ✅ Add `LICENSE` file |
 | Public hosted URL | ⬜ Deploy to Vercel + Cloud Run |
 | Demo video (~3 min) | ⬜ Record and upload |
 | Devpost submission | ⬜ Complete form |
